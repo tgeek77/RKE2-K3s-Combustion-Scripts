@@ -12,16 +12,18 @@ systemctl enable cockpit.socket
 SUSEConnect --url http://rmt.example.com
 
 # Install updates
-#zypper -n up
+zypper -n up
 
 ##### install k3s
 mkdir -pv /root/bin/
 
-#curl https://get.k3s.io -o /root/install
+#get the mac address. It will be the hostname in k3s
+NAME=`ip a | grep ether | awk  '{print $2}'`
 
-curl -sfL https://github.com/k3s-io/k3s/releases/download/v1.23.4%2Bk3s1/k3s -o /root/bin/k3s
+echo "set hostname"
+hostname $NAME
+echo $NAME > /etc/hostname
 
-#curl -sfL https://get.k3s.io | K3S_TOKEN=susetrainingdemotoken K3S_NODE_NAME=node00 K3S_CLUSTER_INIT=true INSTALL_K3S_BIN_DIR=/root/bin/ sh -
 curl -sfL https://get.k3s.io | K3S_TOKEN=susetrainingdemotoken K3S_URL=https://node00.example.com:6443 INSTALL_K3S_BIN_DIR=/root/bin/ sh -
 
 #chmod +x -v /root/bin/k3s
